@@ -5,7 +5,7 @@ const {
 const client = new Client({ intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
 const app = express();
 const port = 8000;
-require('dotenv').config()
+const { BOT_TOKEN } = require('./config/config.json');
 
 
 client.on('ready', () => {
@@ -22,34 +22,36 @@ app.get('/:userid/guilds', (req, res) => {
         const test = {
             id: it.id,
             name: it.name,
-            icon: it.iconURL,
-            in: it.members
+            icon: it.iconURL(),
+            in: it.members.cache.has(userid)
         };
 
-        if(test.in.guild.id = '1095826766658023424')
-        {
-            return {
-                result: JSON.stringify(test.in.guild.members).includes(userid)
-            }
-        } else {
-            return console.log('not in server');
-        }
-
-
-
+        return test;
     });
     res.send(muturalGuilds);
 });
 
-app.get('/guild/:guildid/stats', (req, res) => {
-    const id = req.params.guildid;
+app.get('/guild/:userid/roles', (req, res) => {
+    const userid = req.params.userid;
 
-    client.guilds.get(req.param.guildid).members.map(it => {
-        return {
-            id: it.id,
-            admin: it.hasPermission("ADMINISTRATOR")
-        };
+    const roles = client.guilds.cache.map(it => {
+        const role = {
+            id: it.roles.cache.get('1145820337376854148').members.map(m => m.user.id)
+        }        
+        if (role.id == userid)
+        {
+            return {
+                result: true
+            }
+        } else {
+            return {
+                result: false
+            }
+        }
     });
+
+  
+    res.send(roles)
 });
 
 
@@ -57,4 +59,4 @@ app.listen(port, () => {
     console.log("We are live on " + port)
 })
 
-client.login(process.env.BOT_TOKEN);
+client.login(BOT_TOKEN);
