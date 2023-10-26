@@ -5,7 +5,7 @@ const {
 const client = new Client({ intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
 const app = express();
 const port = 8000;
-const { BOT_TOKEN } = require('./config/config.json');
+require('dotenv').config()
 
 
 client.on('ready', () => {
@@ -59,4 +59,4 @@ app.listen(port, () => {
     console.log("We are live on " + port)
 })
 
-client.login(BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
