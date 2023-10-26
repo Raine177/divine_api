@@ -31,27 +31,15 @@ app.get('/:userid/guilds', (req, res) => {
     res.send(muturalGuilds);
 });
 
-app.get('/guild/:userid/roles', (req, res) => {
-    const userid = req.params.userid;
+app.get('/guild/:guildid/stats', (req, res) => {
+    const id = req.params.guildid;
 
-    const roles = client.guilds.cache.map(it => {
-        const role = {
-            id: it.roles.cache.get('1145820337376854148').members.map(m => m.user.id)
-        }        
-        if (role.id == userid)
-        {
-            return {
-                result: true
-            }
-        } else {
-            return {
-                result: false
-            }
-        }
+    client.guilds.get(req.param.guildid).members.map(it => {
+        return {
+            id: it.id,
+            admin: it.hasPermission("ADMINISTRATOR")
+        };
     });
-
-  
-    res.send(roles)
 });
 
 
